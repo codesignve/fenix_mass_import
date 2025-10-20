@@ -3,11 +3,6 @@ import numpy as np
 import xmlrpc.client
 import streamlit as st
 
-tasks = pd.read_excel("Task (project.task)(5).xlsx")
-
-print(tasks)
-
-
 # Df with 4 columns Project_id, Task_id, predecessor_id
 def upload_file(df, username_email, password_input):
     url = "https://fenix.codesign.codes"
