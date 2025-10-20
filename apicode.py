@@ -3,7 +3,7 @@ import numpy as np
 import xmlrpc.client
 import streamlit as st
 
-# Df with 4 columns Project_id, Task_id, predecessor_id
+# Df with 4 columns Project_id, Task_id, blocked_by
 def upload_file(df, username_email, password_input):
     url = "https://fenix.codesign.codes"
     db = "fenix-opportunities"
@@ -17,15 +17,18 @@ def upload_file(df, username_email, password_input):
     
     for idx, record in df.iterrows():
         print(idx)
-        print(type(record["Predecessor"]))
-        print(record["Predecessor"])
-        if type(record["Predecessor"]) != float:
-            predecessors_names = record["Predecessor"].split(',')
-            print(predecessors_names)
-            predecessors_id = df[df["Title"].isin(predecessors_names)]["ID"].to_list()
-            print(predecessors_id)
+        print(type(record["Blocked By"]))
+        print(record["Blocked By"])
+        if type(record["Blocked By"]) != float:
+            try:
+                predecessors_names = record["Blocked By"].split(',')
+                print(predecessors_names)
+                predecessors_id = df[df["Title"].isin(predecessors_names)]["ID"].to_list()
+                print(predecessors_id)
 
-            models.execute_kw(db, uid, password, 'project.task', 'write', [[int(record["ID"])], {"depend_on_ids": [(6, 0, predecessors_id)]}])
+                models.execute_kw(db, uid, password, 'project.task', 'write', [[int(record["ID"])], {"depend_on_ids": [(6, 0, predecessors_id)]}])
+            except Exception as e:
+                continue
 
 # --- Streamlit User Interface ---
 
